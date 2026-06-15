@@ -42,10 +42,6 @@ public class IPNConfig {
     // have to set a manual offset. Manual offsets still stack on top.
     public static boolean autoAdjustForQuark = true;
 
-    // Item highlight
-    public static boolean enableItemHighlight = true;
-    public static int highlightColor = 0x80FFFF00;
-
     // Continuous crafting
     public static boolean enableContinuousCrafting = true;
 
@@ -102,14 +98,6 @@ public class IPNConfig {
                 "If Quark is installed, automatically lift the top chest sort buttons above "
                         + "the GUI so they don't overlap Quark's search bar. Disable to position "
                         + "them yourself with the offset options.");
-        enableItemHighlight = config.getBoolean("enableItemHighlight", guiCategory, true,
-                "Highlight all matching items when hovering over one");
-        // ARGB colors with alpha >= 0x80 are negative ints — a 0..0xFFFFFFFF
-        // bound range breaks Forge's min/max clamping (0xFFFFFFFF == -1)
-        highlightColor = config.getInt("highlightColor", guiCategory, 0x80FFFF00,
-                Integer.MIN_VALUE, Integer.MAX_VALUE,
-                "Highlight overlay color in ARGB format (hex)");
-
         String craftingCategory = "crafting";
         config.addCustomCategoryComment(craftingCategory, "Continuous crafting settings");
         enableContinuousCrafting = config.getBoolean("enableContinuousCrafting", craftingCategory, true,

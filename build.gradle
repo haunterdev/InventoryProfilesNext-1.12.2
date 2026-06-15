@@ -23,9 +23,17 @@ minecraft {
 }
 
 repositories {
+    maven {
+        // JEI API (compile-only soft dependency, for the GUI exclusion handler)
+        url 'https://maven.blamejared.com'
+    }
 }
 
 dependencies {
+    // Compile against the JEI API only; JEI is an optional runtime dependency.
+    // The @JEIPlugin class is loaded by JEI's annotation scan and stays dormant
+    // when JEI is absent.
+    compileOnly 'mezz.jei:jei_1.12.2:4.16.1.1013:api'
 }
 
 processResources {

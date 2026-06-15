@@ -2,7 +2,6 @@ package com.xy.ipn.proxy;
 
 import com.xy.ipn.client.ButtonHandler;
 import com.xy.ipn.client.ClientEventHandler;
-import com.xy.ipn.client.ItemHighlightHandler;
 import com.xy.ipn.client.LockedSlotHandler;
 import com.xy.ipn.client.LockedSlotProtection;
 import com.xy.ipn.client.ScrollHandler;
@@ -75,7 +74,6 @@ public class ClientProxy extends CommonProxy {
         MinecraftForge.EVENT_BUS.register(new ButtonHandler());
         MinecraftForge.EVENT_BUS.register(new LockedSlotHandler());
         MinecraftForge.EVENT_BUS.register(new LockedSlotProtection());
-        MinecraftForge.EVENT_BUS.register(new ItemHighlightHandler());
         MinecraftForge.EVENT_BUS.register(new ScrollHandler());
         MinecraftForge.EVENT_BUS.register(new ClientContinuousCrafting());
         MinecraftForge.EVENT_BUS.register(new ClientAutoRefill());

@@ -217,18 +217,29 @@ public class ButtonHandler {
             }
         }
 
-        // === Outside-right column for settings + profiles ===
+        // === Outside column for settings + continuous-crafting ===
+        // These sit just outside the GUI's top-right edge and stay there. An
+        // earlier attempt flipped this column to the LEFT when Quark was present,
+        // but that pushed it off-screen / under other overlays and didn't actually
+        // dodge Quark (Quark's own inventory buttons live inside the panel's
+        // top-right, not in this outside column). JEI overlap on the right is
+        // handled separately by the JEI exclusion handler (getExclusionAreas).
         int outsideX = guiLeft + xSize + 2;
         int outsideY = guiTop + 2;
-        int outsideRow = 0;
 
         if (isPlayerInvScreen) {
+            // Mirror of the profile bar: that hugs the GUI's top-LEFT edge, so
+            // settings + continuous-crafting hug the top-RIGHT edge — flush with
+            // the right border, in the strip just above the GUI. Clear of JEI's
+            // item column and Quark's inside transfer arrows.
+            int topStripY = guiTop - btnSize - 2;
+            int rightFlush = guiLeft + xSize; // GUI right border
+
             SortButton settingsBtn = new SortButton(nextId++,
-                    outsideX, outsideY + outsideRow * BTN_SPACING,
+                    rightFlush - 2 * btnSize - 2, topStripY,
                     140, 0, singleTooltip("ipn.sort.button.settings"), 5, -1);
             event.getButtonList().add(settingsBtn);
             sortButtons.add(settingsBtn);
-            outsideRow++;
 
             if (IPNConfig.enableProfiles) {
                 // Horizontal profile bar above the GUI, like the original
@@ -276,11 +287,10 @@ public class ButtonHandler {
 
             int checkU = IPNConfig.enableContinuousCrafting ? 80 : 70;
             craftingCheckbox = new SortButton(nextId++,
-                    outsideX, outsideY + outsideRow * BTN_SPACING,
+                    rightFlush - btnSize, topStripY,
                     checkU, 0, craftingCheckboxTooltip(), 8, -1);
             event.getButtonList().add(craftingCheckbox);
             sortButtons.add(craftingCheckbox);
-            outsideRow++;
         }
 
         if (hasContainer) {
@@ -506,6 +516,11 @@ public class ButtonHandler {
         int textX = profileBarNameX;
         int textY = profileBarY + 1;
         String trimmed = mc.fontRenderer.trimStringToWidth(profileBarName(), PROFILE_NAME_MAX_WIDTH);
+        // Hovering an item leaves GL lighting on and the color tinted, which shaded
+        // the profile text grey. Reset both BEFORE drawing so the name keeps its
+        // intended color no matter what slot is hovered.
+        net.minecraft.client.renderer.GlStateManager.disableLighting();
+        net.minecraft.client.renderer.GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
         mc.fontRenderer.drawStringWithShadow(trimmed, textX, textY, 0xFFFFFF);
         // Font rendering dirties GL color state — reset before any texture draw
         net.minecraft.client.renderer.GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
@@ -518,5 +533,30 @@ public class ButtonHandler {
             }
         }
         return false;
+    }
+
+    /**
+     * Screen-space rectangles covered by IPN's buttons + profile bar, in absolute
+     * GUI coordinates. Consumed by the JEI exclusion handler so JEI shifts its
+     * ingredient list off our buttons. Returns empty when nothing is drawn.
+     */
+    public static java.util.List<java.awt.Rectangle> getExclusionAreas() {
+        java.util.List<java.awt.Rectangle> areas = new ArrayList<java.awt.Rectangle>();
+        for (SortButton btn : sortButtons) {
+            if (btn != null && btn.visible) {
+                areas.add(new java.awt.Rectangle(btn.x, btn.y, btn.width, btn.height));
+            }
+        }
+        if (hasProfileBar) {
+            // Cover the whole profile bar strip (prev → delete) so the name label
+            // and gaps between buttons are excluded too.
+            int btnSize = IPNConfig.buttonSize;
+            int right = profileDeleteButton != null && profileDeleteButton.visible
+                    ? profileDeleteButton.x + btnSize
+                    : profileBarNameX + profileNameWidth();
+            int width = Math.max(0, right - profileBarX);
+            areas.add(new java.awt.Rectangle(profileBarX, profileBarY, width, btnSize));
+        }
+        return areas;
     }
 }

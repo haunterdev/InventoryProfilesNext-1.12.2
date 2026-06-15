@@ -1,6 +1,7 @@
 package com.xy.ipn.client;
 
 import com.xy.ipn.client.action.ClientScrollTransfer;
+import com.xy.ipn.util.ContainerUtils;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Slot;
 import net.minecraftforge.client.event.GuiScreenEvent;
@@ -32,7 +33,22 @@ public class ScrollHandler {
             return;
         }
 
+        // The survival player inventory has no real external container — its only
+        // non-player slots are the crafting result + 2x2 crafting grid, which the
+        // generic check below mistakes for a container. That let the wheel transfer
+        // items while hovering the hotbar (the "items move with the scroll wheel in
+        // the inventory hotbar" bug). Bail outright on the player's own screen.
+        if (event.getGui() instanceof net.minecraft.client.gui.inventory.GuiInventory) {
+            return;
+        }
+
         GuiContainer gui = (GuiContainer) event.getGui();
+
+        // Any other screen with no non-player slots: nowhere to transfer "to
+        // container", and scroll-to-player just reshuffles the player's own slots.
+        if (!hasNonPlayerSlots(gui)) {
+            return;
+        }
 
         int scroll = Mouse.getEventDWheel();
         if (scroll == 0) {
@@ -57,5 +73,15 @@ public class ScrollHandler {
         ClientScrollTransfer.transfer(gui, slot.slotNumber, toContainer, fullStack);
 
         event.setCanceled(true);
+    }
+
+    /** True when the open container exposes at least one non-player slot section. */
+    private static boolean hasNonPlayerSlots(GuiContainer gui) {
+        for (Slot slot : gui.inventorySlots.inventorySlots) {
+            if (!ContainerUtils.isPlayerSlot(slot)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

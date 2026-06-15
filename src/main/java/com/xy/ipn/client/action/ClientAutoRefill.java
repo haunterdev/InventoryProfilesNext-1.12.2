@@ -34,6 +34,13 @@ public class ClientAutoRefill {
     private ItemStack prevMainHand = ItemStack.EMPTY;
     /** Previous tick's off-hand stack copy. */
     private ItemStack prevOffHand = ItemStack.EMPTY;
+    /**
+     * Previous tick's selected hotbar slot. Used to tell a real depletion apart
+     * from a scroll / number-key selection change — selecting a different slot
+     * also makes getCurrentItem() change, which otherwise looks like the held
+     * item was consumed.
+     */
+    private int prevHotbarIdx = -1;
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
@@ -41,8 +48,7 @@ public class ClientAutoRefill {
 
         Minecraft mc = Minecraft.getMinecraft();
         if (mc.player == null || mc.world == null) {
-            prevMainHand = ItemStack.EMPTY;
-            prevOffHand = ItemStack.EMPTY;
+            resetBaseline();
             return;
         }
 
@@ -50,21 +56,18 @@ public class ClientAutoRefill {
         // the player's own clicks (e.g. shift-clicking the held stack out of
         // the inventory makes the held slot empty and triggers a swap-back).
         if (mc.currentScreen != null) {
-            prevMainHand = ItemStack.EMPTY;
-            prevOffHand = ItemStack.EMPTY;
+            resetBaseline();
             return;
         }
 
         if (!IPNConfig.enableAutoRefill) {
-            prevMainHand = ItemStack.EMPTY;
-            prevOffHand = ItemStack.EMPTY;
+            resetBaseline();
             return;
         }
 
         // Only operate when in the player's own inventory view (or in-game)
         if (mc.player.openContainer != mc.player.inventoryContainer) {
-            prevMainHand = ItemStack.EMPTY;
-            prevOffHand = ItemStack.EMPTY;
+            resetBaseline();
             return;
         }
 
@@ -72,19 +75,35 @@ public class ClientAutoRefill {
         ItemStack curMainHand = mc.player.inventory.getCurrentItem();
         ItemStack curOffHand = mc.player.inventory.offHandInventory.get(0);
 
-        // Check main hand
-        if (!prevMainHand.isEmpty() && curMainHand.isEmpty()) {
+        // Scrolling the wheel (or pressing a number key) changes which hotbar slot
+        // is selected, so getCurrentItem() now reports a *different* slot's stack.
+        // Going from a full slot to an empty one is indistinguishable from "the
+        // held item was used up" and made auto-refill shove an item into the newly
+        // selected slot — the "scrolling moves my tools around" bug. Only test for
+        // depletion when the same slot stayed selected; otherwise just resync.
+        boolean selectionUnchanged = (hotbarIdx == prevHotbarIdx);
+
+        // Check main hand — only when the selected slot did not change this tick
+        if (selectionUnchanged && !prevMainHand.isEmpty() && curMainHand.isEmpty()) {
             refill(containerInvIdxToSlotId(hotbarIdx), hotbarIdx, prevMainHand);
         }
 
-        // Check offhand
+        // Check offhand — offhand contents are unaffected by hotbar selection
         if (!prevOffHand.isEmpty() && curOffHand.isEmpty()) {
             refill(containerInvIdxToSlotId(OFFHAND_INV_IDX), OFFHAND_INV_IDX, prevOffHand);
         }
 
-        // Store current stacks for next tick
+        // Store current state for next tick
         prevMainHand = curMainHand.isEmpty() ? ItemStack.EMPTY : curMainHand.copy();
         prevOffHand = curOffHand.isEmpty() ? ItemStack.EMPTY : curOffHand.copy();
+        prevHotbarIdx = hotbarIdx;
+    }
+
+    /** Reset per-tick baselines so no depletion is detected on the next tick. */
+    private void resetBaseline() {
+        prevMainHand = ItemStack.EMPTY;
+        prevOffHand = ItemStack.EMPTY;
+        prevHotbarIdx = -1;
     }
 
     /**
