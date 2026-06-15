@@ -15,6 +15,7 @@ import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.gui.GuiRepair;
 import net.minecraft.inventory.Slot;
 import net.minecraftforge.client.event.GuiScreenEvent;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -29,6 +30,9 @@ import org.lwjgl.input.Keyboard;
  */
 @SideOnly(Side.CLIENT)
 public class ClientEventHandler {
+
+    /** Cached once: is JEI present? Gates the soft-dependency search-focus check. */
+    private static final boolean JEI_LOADED = Loader.isModLoaded("jei");
 
     /**
      * IMPORTANT 1.12.2 quirk: KeyBinding.isPressed() only works while no GuiScreen
@@ -46,7 +50,7 @@ public class ClientEventHandler {
 
         Minecraft mc = Minecraft.getMinecraft();
         GuiContainer gui = (GuiContainer) event.getGui();
-        if (mc.player == null || isTextFieldFocused(gui)) {
+        if (mc.player == null || isTextFieldFocused(gui) || isJeiSearchFocused()) {
             return;
         }
 
@@ -150,6 +154,15 @@ public class ClientEventHandler {
         }
         // Player slot → move to container; container slot → move to player
         return ContainerUtils.isPlayerSlot(slot);
+    }
+
+    /**
+     * True when JEI is installed and its search box has keyboard focus. Kept in a
+     * separate method behind the JEI_LOADED guard so the JEI-referencing compat
+     * class is only loaded when JEI is actually present (soft dependency).
+     */
+    private static boolean isJeiSearchFocused() {
+        return JEI_LOADED && com.xy.ipn.compat.IPNJeiPlugin.isSearchFocused();
     }
 
     private static boolean isTextFieldFocused(GuiContainer gui) {

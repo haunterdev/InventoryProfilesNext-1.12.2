@@ -1,6 +1,7 @@
 package com.xy.ipn.compat;
 
 import com.xy.ipn.client.ButtonHandler;
+import mezz.jei.api.IJeiRuntime;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.IModRegistry;
 import mezz.jei.api.JEIPlugin;
@@ -20,6 +21,31 @@ import java.util.List;
  */
 @JEIPlugin
 public class IPNJeiPlugin implements IModPlugin {
+
+    /** Captured when JEI's runtime comes up; used to query search-box focus. */
+    private static volatile IJeiRuntime runtime;
+
+    @Override
+    public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
+        runtime = jeiRuntime;
+    }
+
+    /**
+     * True when JEI's ingredient-list search box currently holds keyboard focus.
+     * IPN's GUI hotkeys consult this so a sort/profile key bound to a letter is
+     * not swallowed while the player is typing in JEI's search box.
+     */
+    public static boolean isSearchFocused() {
+        IJeiRuntime r = runtime;
+        if (r == null) {
+            return false;
+        }
+        try {
+            return r.getIngredientListOverlay().hasKeyboardFocus();
+        } catch (Exception e) {
+            return false;
+        }
+    }
 
     @Override
     public void register(IModRegistry registry) {
