@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Client-side "move all" — QUICK_MOVE every non-empty, non-locked source slot.
+ * Client-side "move all", QUICK_MOVE every non-empty, non-locked source slot.
  *
  * Direction:
  * <ul>
@@ -88,7 +88,7 @@ public final class ClientMoveAll {
             if (toContainer) {
                 ContainerClicker.shiftClick(slot.slotNumber);
             } else if (!ClientQuickMoveRouter.quickMoveToPlayer(container, slot.slotNumber, false)) {
-                // no locked slots (or router declined) — vanilla is identical
+                // no locked slots (or router declined), vanilla is identical
                 ContainerClicker.shiftClick(slot.slotNumber);
             }
         }

@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Client-side "throw all" — THROW(1) every slot in the same group whose stack
+ * Client-side "throw all", THROW(1) every slot in the same group whose stack
  * matches the type of the stack at {@code slotId}.  Locked player slots are
  * skipped.
  */
@@ -47,7 +47,7 @@ public final class ClientThrowAll {
         }
         ItemStack reference = referenceSlot.getStack();
         if (reference.isEmpty()) {
-            return; // nothing to throw — slot is empty
+            return; // nothing to throw, slot is empty
         }
 
         for (Slot slot : group.getSlots()) {

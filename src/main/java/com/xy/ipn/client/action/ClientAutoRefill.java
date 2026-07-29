@@ -36,7 +36,7 @@ public class ClientAutoRefill {
     private ItemStack prevOffHand = ItemStack.EMPTY;
     /**
      * Previous tick's selected hotbar slot. Used to tell a real depletion apart
-     * from a scroll / number-key selection change — selecting a different slot
+     * from a scroll / number-key selection change, selecting a different slot
      * also makes getCurrentItem() change, which otherwise looks like the held
      * item was consumed.
      */
@@ -52,7 +52,7 @@ public class ClientAutoRefill {
             return;
         }
 
-        // Refill only acts during gameplay — with any GUI open it would fight
+        // Refill only acts during gameplay, with any GUI open it would fight
         // the player's own clicks (e.g. shift-clicking the held stack out of
         // the inventory makes the held slot empty and triggers a swap-back).
         if (mc.currentScreen != null) {
@@ -79,16 +79,16 @@ public class ClientAutoRefill {
         // is selected, so getCurrentItem() now reports a *different* slot's stack.
         // Going from a full slot to an empty one is indistinguishable from "the
         // held item was used up" and made auto-refill shove an item into the newly
-        // selected slot — the "scrolling moves my tools around" bug. Only test for
+        // selected slot, the "scrolling moves my tools around" bug. Only test for
         // depletion when the same slot stayed selected; otherwise just resync.
         boolean selectionUnchanged = (hotbarIdx == prevHotbarIdx);
 
-        // Check main hand — only when the selected slot did not change this tick
+        // Check main hand, only when the selected slot did not change this tick
         if (selectionUnchanged && !prevMainHand.isEmpty() && curMainHand.isEmpty()) {
             refill(containerInvIdxToSlotId(hotbarIdx), hotbarIdx, prevMainHand);
         }
 
-        // Check offhand — offhand contents are unaffected by hotbar selection
+        // Check offhand, offhand contents are unaffected by hotbar selection
         if (!prevOffHand.isEmpty() && curOffHand.isEmpty()) {
             refill(containerInvIdxToSlotId(OFFHAND_INV_IDX), OFFHAND_INV_IDX, prevOffHand);
         }
@@ -301,7 +301,7 @@ public class ClientAutoRefill {
             return order;
         }
 
-        // Main inventory bottom row (27-35) — closest to hotbar
+        // Main inventory bottom row (27-35), closest to hotbar
         int baseCol = targetIndex; // hotbar slot index = column
         pos = addRowByProximity(order, pos, baseCol, 27);
         pos = addRowByProximity(order, pos, baseCol, 18);

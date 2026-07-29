@@ -64,13 +64,13 @@ public class SortingContext {
                 }
                 mainInvSlots.add(slot);
             } else {
-                // Container slot — group by contiguous runs of same inventory
+                // Container slot, group by contiguous runs of same inventory
                 IInventory slotInv = slot.inventory;
                 if (currentInventory == null || currentInventory == slotInv) {
                     currentRun.add(slot);
                     currentInventory = slotInv;
                 } else {
-                    // Different inventory — flush and start new run
+                    // Different inventory, flush and start new run
                     if (!currentRun.isEmpty()) {
                         containerGroups.add(new SlotGroup(new ArrayList<>(currentRun), false));
                     }

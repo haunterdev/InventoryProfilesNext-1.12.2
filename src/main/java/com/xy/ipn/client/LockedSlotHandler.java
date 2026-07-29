@@ -112,7 +112,7 @@ public class LockedSlotHandler {
                 writer.newLine();
             }
         } catch (IOException e) {
-            // Silently fail — locked slots are non-critical
+            // Silently fail, locked slots are non-critical
         } finally {
             if (writer != null) {
                 try {
@@ -151,7 +151,7 @@ public class LockedSlotHandler {
                 }
             }
         } catch (IOException e) {
-            // Silently fail — locked slots are non-critical
+            // Silently fail, locked slots are non-critical
         } finally {
             if (reader != null) {
                 try {

@@ -32,24 +32,24 @@ public final class ContainerClicker {
 
     // ---- public API --------------------------------------------------------
 
-    /** Left-click (PICKUP, button 0) — pick up or place a full stack. */
+    /** Left-click (PICKUP, button 0), pick up or place a full stack. */
     public static void leftClick(int slotId) {
         mc().playerController.windowClick(winId(), slotId, 0, ClickType.PICKUP, mc().player);
     }
 
-    /** Right-click (PICKUP, button 1) — pick up half / place one. */
+    /** Right-click (PICKUP, button 1), pick up half / place one. */
     public static void rightClick(int slotId) {
         mc().playerController.windowClick(winId(), slotId, 1, ClickType.PICKUP, mc().player);
     }
 
-    /** Shift-click (QUICK_MOVE, button 0) — vanilla transfer to other section. */
+    /** Shift-click (QUICK_MOVE, button 0), vanilla transfer to other section. */
     public static void shiftClick(int slotId) {
         mc().playerController.windowClick(winId(), slotId, 0, ClickType.QUICK_MOVE, mc().player);
     }
 
     /**
      * Swap with a hotbar slot (SWAP, button = hotbar index 0-8).
-     * No cursor involvement — instant single-packet swap.
+     * No cursor involvement, instant single-packet swap.
      */
     public static void swap(int slotId, int hotbarIdx) {
         mc().playerController.windowClick(winId(), slotId, hotbarIdx, ClickType.SWAP, mc().player);

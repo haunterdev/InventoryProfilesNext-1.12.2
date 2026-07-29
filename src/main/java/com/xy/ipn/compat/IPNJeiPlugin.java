@@ -12,7 +12,7 @@ import java.awt.Rectangle;
 import java.util.List;
 
 /**
- * JEI compatibility — reports the screen areas covered by IPN's sort/profile
+ * JEI compatibility, reports the screen areas covered by IPN's sort/profile
  * buttons so JEI shifts its ingredient list off them instead of drawing on top.
  *
  * Soft dependency: this class references the JEI API (compile-only). It is only

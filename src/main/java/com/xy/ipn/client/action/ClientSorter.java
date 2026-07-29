@@ -296,8 +296,8 @@ public final class ClientSorter {
     /**
      * Realise the {@code target} layout through two client-side passes:
      * <ol>
-     *   <li><b>Merge pass</b> — combine partial stacks of the same type.</li>
-     *   <li><b>Permutation pass</b> — selection-sort the slots to match target.</li>
+     *   <li><b>Merge pass</b>, combine partial stacks of the same type.</li>
+     *   <li><b>Permutation pass</b>, selection-sort the slots to match target.</li>
      * </ol>
      */
     private static void realizeTarget(GuiContainer gui, List<Slot> sortableSlots,
@@ -322,7 +322,7 @@ public final class ClientSorter {
                 continue;
             }
             for (int j = i + 1; j < slots.size(); j++) {
-                // Re-read slotI — may have been modified by a previous merge
+                // Re-read slotI, may have been modified by a previous merge
                 stackI = slotI.getStack();
                 if (stackI.isEmpty() || stackI.getCount() >= stackI.getMaxStackSize()) {
                     break;
@@ -371,7 +371,7 @@ public final class ClientSorter {
                 }
             }
             if (found < 0) {
-                continue; // no matching stack available — leave as-is
+                continue; // no matching stack available, leave as-is
             }
 
             Slot slotJ = slots.get(found);
@@ -414,7 +414,7 @@ public final class ClientSorter {
             }
 
             for (Slot mainSlot : mainInv.getSlots()) {
-                // Re-read hotbar stack — may have been topped up by a previous source
+                // Re-read hotbar stack, may have been topped up by a previous source
                 hotbarStack = hotbarSlot.getStack();
                 if (hotbarStack.isEmpty() || hotbarStack.getCount() >= hotbarStack.getMaxStackSize()) {
                     break;

@@ -48,7 +48,7 @@ public class ButtonHandler {
     private static int trackedGuiTop = Integer.MIN_VALUE;
 
     // Horizontal profile bar (player inventory only):
-    // [prev] [name] [next] [+] [x] — prev/next hidden when no profiles exist,
+    // [prev] [name] [next] [+] [x], prev/next hidden when no profiles exist,
     // x hidden when no profile is active. Layout + visibility recomputed every
     // frame in onDrawScreenPre so delete/save state changes show instantly.
     private static final int PROFILE_NAME_MIN_WIDTH = 40;
@@ -165,7 +165,7 @@ public class ButtonHandler {
         GuiScreen screen = event.getGui();
         if (!(screen instanceof GuiContainer)) return;
 
-        // Clear stale state BEFORE any early return — otherwise the profile
+        // Clear stale state BEFORE any early return, otherwise the profile
         // bar from a previous screen keeps drawing over creative etc.
         sortButtons.clear();
         craftingCheckbox = null;
@@ -229,7 +229,7 @@ public class ButtonHandler {
 
         if (isPlayerInvScreen) {
             // Mirror of the profile bar: that hugs the GUI's top-LEFT edge, so
-            // settings + continuous-crafting hug the top-RIGHT edge — flush with
+            // settings + continuous-crafting hug the top-RIGHT edge, flush with
             // the right border, in the strip just above the GUI. Clear of JEI's
             // item column and Quark's inside transfer arrows.
             int topStripY = guiTop - btnSize - 2;
@@ -522,7 +522,7 @@ public class ButtonHandler {
         net.minecraft.client.renderer.GlStateManager.disableLighting();
         net.minecraft.client.renderer.GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
         mc.fontRenderer.drawStringWithShadow(trimmed, textX, textY, 0xFFFFFF);
-        // Font rendering dirties GL color state — reset before any texture draw
+        // Font rendering dirties GL color state, reset before any texture draw
         net.minecraft.client.renderer.GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
     }
 

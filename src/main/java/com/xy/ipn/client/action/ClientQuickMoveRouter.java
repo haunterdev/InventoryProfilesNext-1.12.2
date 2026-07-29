@@ -50,7 +50,7 @@ public final class ClientQuickMoveRouter {
         Minecraft mc = Minecraft.getMinecraft();
         if (mc.player == null) return false;
 
-        // Nothing locked — vanilla produces an identical result with one packet
+        // Nothing locked, vanilla produces an identical result with one packet
         if (!LockedSlotHandler.hasAnyLocked()) return false;
 
         // The click sequence needs a free cursor

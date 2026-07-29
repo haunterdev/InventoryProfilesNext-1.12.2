@@ -58,7 +58,7 @@ public class ContainerUtils {
 
         ItemStack slotStack = slot.getStack();
 
-        // Slot is empty — put the whole stack
+        // Slot is empty, put the whole stack
         if (slotStack.isEmpty()) {
             int toPut = Math.min(stack.getCount(), Math.min(slot.getItemStackLimit(stack), stack.getMaxStackSize()));
             ItemStack put = stack.copy();
@@ -74,7 +74,7 @@ public class ContainerUtils {
             return remainder;
         }
 
-        // Slot has a matching item — try to grow it
+        // Slot has a matching item, try to grow it
         if (ItemStack.areItemsEqual(stack, slotStack)
                 && ItemStack.areItemStackTagsEqual(stack, slotStack)) {
             int maxSize = Math.min(slot.getItemStackLimit(slotStack), slotStack.getMaxStackSize());
@@ -93,7 +93,7 @@ public class ContainerUtils {
             }
         }
 
-        // Cannot merge — return entire stack as remainder
+        // Cannot merge, return entire stack as remainder
         return stack;
     }
 }

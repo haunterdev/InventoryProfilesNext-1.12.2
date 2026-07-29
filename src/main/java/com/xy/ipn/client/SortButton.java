@@ -59,7 +59,7 @@ public class SortButton extends GuiButton {
             mc.fontRenderer.drawStringWithShadow(label,
                     this.x + (this.width - textWidth) / 2.0f + 0.5f,
                     this.y + (this.height - 8) / 2.0f + 1, color);
-            // Font rendering dirties GL color state — reset for later draws
+            // Font rendering dirties GL color state, reset for later draws
             GlStateManager.color(1.0f, 1.0f, 1.0f, 1.0f);
             return;
         }

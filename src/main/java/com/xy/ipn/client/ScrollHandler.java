@@ -12,7 +12,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 /**
- * CLIENT-SIDE — scroll wheel transfers items between container sections.
+ * CLIENT-SIDE, scroll wheel transfers items between container sections.
  *
  * Scroll up = move to container, scroll down = move to player inventory.
  * Hold Shift to move the full stack instead of one item.
@@ -28,12 +28,12 @@ public class ScrollHandler {
             return;
         }
 
-        // Creative inventory uses the wheel to scroll its item list — don't hijack it
+        // Creative inventory uses the wheel to scroll its item list, don't hijack it
         if (event.getGui() instanceof net.minecraft.client.gui.inventory.GuiContainerCreative) {
             return;
         }
 
-        // The survival player inventory has no real external container — its only
+        // The survival player inventory has no real external container, its only
         // non-player slots are the crafting result + 2x2 crafting grid, which the
         // generic check below mistakes for a container. That let the wheel transfer
         // items while hovering the hotbar (the "items move with the scroll wheel in

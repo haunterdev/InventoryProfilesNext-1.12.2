@@ -29,7 +29,7 @@ public class ClientProxy extends CommonProxy {
             "key.ipn.move_all", KeyConflictContext.GUI, Keyboard.KEY_G, "key.categories.ipn");
     public static final KeyBinding KEY_CONFIG = new KeyBinding(
             "key.ipn.config", KeyConflictContext.GUI, Keyboard.KEY_O, "key.categories.ipn");
-    // K, not L — L is the vanilla advancements key
+    // K, not L, L is the vanilla advancements key
     public static final KeyBinding KEY_LOCK_SLOT = new KeyBinding(
             "key.ipn.lock_slot", KeyConflictContext.GUI, Keyboard.KEY_K, "key.categories.ipn");
     public static final KeyBinding KEY_THROW_ALL = new KeyBinding(

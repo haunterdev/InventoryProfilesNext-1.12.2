@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Client-side scroll transfer — moves items one-at-a-time or by full stack
+ * Client-side scroll transfer, moves items one-at-a-time or by full stack
  * between the player inventory and the open container.
  *
  * @see com.xy.ipn.client.ScrollHandler for the scroll-wheel trigger
@@ -118,7 +118,7 @@ public final class ClientScrollTransfer {
             return slot;
         }
 
-        // Pass 2: first empty valid slot — empty LOCKED player slots never
+        // Pass 2: first empty valid slot, empty LOCKED player slots never
         // receive items
         for (Slot slot : destSlots) {
             if (!slot.getStack().isEmpty()) continue;

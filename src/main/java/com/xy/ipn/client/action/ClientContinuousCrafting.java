@@ -140,7 +140,7 @@ public class ClientContinuousCrafting {
             return;
         }
 
-        // Gather player inventory slots (invIdx 0-35, hotbar included — the
+        // Gather player inventory slots (invIdx 0-35, hotbar included, the
         // original counts all 36 main-inventory slots as refill sources)
         List<Slot> playerMainSlots = new ArrayList<Slot>();
         for (Slot slot : container.inventorySlots) {
@@ -184,7 +184,7 @@ public class ClientContinuousCrafting {
 
             // While any group slot is below target and sources remain, refill.
             // Progress guard: vanilla even-split gives floor(cursor/slots) per
-            // slot — 0 when the cursor stack is smaller than the drag set, so
+            // slot, 0 when the cursor stack is smaller than the drag set, so
             // an iteration can be a complete no-op. Bail when grid counts stop
             // changing instead of looping forever.
             int prevGridTotal = -1;
@@ -201,7 +201,7 @@ public class ClientContinuousCrafting {
                     }
                 }
                 if (belowSlots.isEmpty()) break; // all satisfied
-                if (gridTotal == prevGridTotal) break; // no progress — bail
+                if (gridTotal == prevGridTotal) break; // no progress, bail
                 prevGridTotal = gridTotal;
 
                 // Find a source slot with matching items

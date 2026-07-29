@@ -14,7 +14,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  *
  * Item pickup is decided server-side (vanilla addItemStackToInventory knows
  * nothing about locked slots), so a client-side mod cannot prevent the
- * placement — instead this guard watches locked slots every tick during
+ * placement, instead this guard watches locked slots every tick during
  * gameplay and immediately moves any stack that appeared in an empty locked
  * slot to a free unlocked slot (or merges it into matching stacks).
  *
@@ -53,7 +53,7 @@ public class ClientLockedSlotPickupGuard {
             return;
         }
 
-        // With a GUI open the player moves items deliberately — just track
+        // With a GUI open the player moves items deliberately, just track
         if (mc.currentScreen != null
                 || mc.player.openContainer != mc.player.inventoryContainer) {
             takeSnapshot(mc);
@@ -126,7 +126,7 @@ public class ClientLockedSlotPickupGuard {
             }
             ContainerClicker.leftClick(invIdxToSlotId(invIdx));
         }
-        // Remainder (if any) goes back to the locked slot — no legal room left
+        // Remainder (if any) goes back to the locked slot, no legal room left
         if (lifted && !mc.player.inventory.getItemStack().isEmpty()) {
             ContainerClicker.leftClick(sourceSlotId);
         }

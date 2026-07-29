@@ -19,7 +19,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 /**
- * CLIENT-SIDE — prevents item movement out of locked player inventory slots.
+ * CLIENT-SIDE, prevents item movement out of locked player inventory slots.
  *
  * Intercepts mouse clicks (shift-click) and keyboard drops (Q)
  * when the player hovers over a locked inventory slot (0-35).
@@ -80,7 +80,7 @@ public class LockedSlotProtection {
             return;
         }
         int mouseButton = Mouse.getEventButton();
-        // No button pressed — not a click event we care about
+        // No button pressed, not a click event we care about
         if (mouseButton < 0) {
             return;
         }
@@ -155,7 +155,7 @@ public class LockedSlotProtection {
     /**
      * True when vanilla would route this stack to an armor/offhand slot on
      * shift-click in the player GUI (shift-click-to-equip). Those moves are
-     * left to vanilla — armor and offhand slots cannot be locked anyway.
+     * left to vanilla, armor and offhand slots cannot be locked anyway.
      */
     private static boolean isEquipmentRouted(ItemStack stack) {
         if (stack.isEmpty()) return false;
