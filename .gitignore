@@ -26,3 +26,9 @@ Thumbs.db
 # Forge
 eclipse/
 .git-easymagic-backup/
+
+# Run
+*.log
+
+# Internal working notes (not shipped)
+_docs/

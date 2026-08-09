@@ -2,7 +2,9 @@
 
 Take control over your inventory. Sort. Move matching/all items. Throw all items. Locked slots. Gear sets! And much more!
 
-A faithful backport of [Inventory Profiles Next](https://www.curseforge.com/minecraft/mc-mods/inventory-profiles-next) by [anti-ad / mirinimi](https://github.com/blackd/Inventory-Profiles) to **Forge 1.12.2**.
+A 1.12.2 port of [Inventory Profiles Next](https://www.curseforge.com/minecraft/mc-mods/inventory-profiles-next) by [anti-ad / mirinimi](https://github.com/blackd/Inventory-Profiles).
+
+Requires Minecraft 1.12.2 and Forge 14.23.5.2860+.
 
 **100% client-side**, every inventory operation is executed through vanilla window-click packets, so it works on **vanilla servers** and any modded server.
 
