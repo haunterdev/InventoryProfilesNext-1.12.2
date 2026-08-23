@@ -67,6 +67,6 @@ Backported for the 1.12.2 input/GUI systems:
 ## Credits & License
 
 - Original mod: [Inventory Profiles Next](https://github.com/blackd/Inventory-Profiles) by **anti-ad / mirinimi** and contributors
-- 1.12.2 backport: **XY**
+- 1.12.2 backport: **xy**
 
 Licensed under the [GNU Affero General Public License v3.0](LICENSE).

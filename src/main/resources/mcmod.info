@@ -8,7 +8,7 @@
     "url": "",
     "updateUrl": "",
     "guiFactory": "com.xy.ipn.config.IPNGuiFactory",
-    "authorList": ["anti-ad (original)", "XY (1.12.2 port)"],
+    "authorList": ["anti-ad (original)", "xy (1.12.2 port)"],
     "credits": "Original mod by anti-ad (Inventory Profiles Next)",
     "logoFile": "",
     "screenshots": [],
