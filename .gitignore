@@ -29,6 +29,4 @@ eclipse/
 
 # Run
 *.log
-
-# Internal working notes (not shipped)
 _docs/
