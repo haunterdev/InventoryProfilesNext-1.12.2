@@ -1,5 +1,6 @@
 package com.xy.ipn.sort;
 
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -13,6 +14,11 @@ import java.util.Comparator;
  * 0 (ID): compare by Item.getIdFromItem, then metadata, then NBT existence
  * 1 (NAME): compare by getDisplayName (case-insensitive), then by ID
  * 2 (MOD): compare by registry namespace, then registry path, then metadata
+ * 3 (CATEGORY): group by creative tab (building blocks, deco, redstone, food,
+ *               tools, combat, materials, ...), then name, then ID, then meta.
+ *               This is the semantic grouping Inventory Tweaks gets from its
+ *               category tree, reconstructed from vanilla creative-tab data so
+ *               it works for modded items too with no config tree.
  *
  * Empty stacks always sort last.
  */
@@ -46,9 +52,43 @@ public class ItemSortComparator implements Comparator<ItemStack> {
                 return compareByName(a, b);
             case 2:
                 return compareByMod(a, b);
+            case 3:
+                return compareByCategory(a, b);
             default:
                 return compareById(a, b);
         }
+    }
+
+    /**
+     * Sort by creative-tab index (semantic category), then display name,
+     * then item ID, then metadata. Items with no creative tab sort last.
+     */
+    private int compareByCategory(ItemStack a, ItemStack b) {
+        int cmp = Integer.compare(tabIndex(a), tabIndex(b));
+        if (cmp != 0) {
+            return cmp;
+        }
+
+        String nameA = a.getDisplayName();
+        String nameB = b.getDisplayName();
+        if (nameA != null && nameB != null) {
+            cmp = nameA.compareToIgnoreCase(nameB);
+            if (cmp != 0) {
+                return cmp;
+            }
+        }
+
+        cmp = Integer.compare(Item.getIdFromItem(a.getItem()), Item.getIdFromItem(b.getItem()));
+        if (cmp != 0) {
+            return cmp;
+        }
+        return Integer.compare(a.getMetadata(), b.getMetadata());
+    }
+
+    /** Creative-tab index for an item, or Integer.MAX_VALUE when it has none (sorts last). */
+    private static int tabIndex(ItemStack stack) {
+        CreativeTabs tab = stack.getItem().getCreativeTab();
+        return tab == null ? Integer.MAX_VALUE : tab.getIndex();
     }
 
     /**

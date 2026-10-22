@@ -447,6 +447,7 @@ public final class ClientSorter {
         String method = IPNConfig.defaultSortMethod;
         if ("name".equalsIgnoreCase(method)) return 1;
         if ("mod".equalsIgnoreCase(method)) return 2;
+        if ("category".equalsIgnoreCase(method)) return 3;
         return 0;
     }
 

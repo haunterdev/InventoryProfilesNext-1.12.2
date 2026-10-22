@@ -24,8 +24,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  *       allowed (deliberate action)</li>
  *   <li>pickup top-ups of a matching stack already in a locked slot stay
  *       allowed (same rule as quick-move merging)</li>
- *   <li>the active hotbar slot is exempt so auto-refill and deliberate
- *       hand-pickup keep working</li>
+ *   <li>the active hotbar slot is guarded too (CurseForge comment 8472221),
+ *       except right after an auto-refill or while pick-block is held</li>
  * </ul>
  */
 @SideOnly(Side.CLIENT)
@@ -62,8 +62,11 @@ public class ClientLockedSlotPickupGuard {
 
         if (snapshotValid && mc.player.inventory.getItemStack().isEmpty()) {
             int held = mc.player.inventory.currentItem;
+            long sinceRefill = mc.world.getTotalWorldTime() - ClientAutoRefill.lastRefillTick;
+            boolean handExempt = (sinceRefill >= 0 && sinceRefill <= 2)
+                    || mc.gameSettings.keyBindPickBlock.isKeyDown();
             for (int invIdx = 0; invIdx < 36; invIdx++) {
-                if (invIdx == held) continue;
+                if (invIdx == held && handExempt) continue;
                 if (!LockedSlotHandler.isLocked(invIdx)) continue;
                 ItemStack cur = mc.player.inventory.mainInventory.get(invIdx);
                 if (prevStacks[invIdx].isEmpty() && !cur.isEmpty()) {

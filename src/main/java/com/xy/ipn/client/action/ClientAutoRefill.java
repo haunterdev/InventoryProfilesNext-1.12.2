@@ -30,6 +30,9 @@ public class ClientAutoRefill {
 
     private static final int OFFHAND_INV_IDX = 40;
 
+    /** World tick of the last refill, so the locked-slot guard leaves a refilled hand alone. */
+    public static long lastRefillTick = -1000L;
+
     /** Previous tick's main-hand stack copy. */
     private ItemStack prevMainHand = ItemStack.EMPTY;
     /** Previous tick's off-hand stack copy. */
@@ -147,6 +150,7 @@ public class ClientAutoRefill {
                 hotbarSwapIdx = targetInvIdx;
             }
             ContainerClicker.swap(sourceSlotId, hotbarSwapIdx);
+            lastRefillTick = mc.world.getTotalWorldTime();
         } else if (targetInvIdx == OFFHAND_INV_IDX) {
             ContainerClicker.swap(sourceSlotId, 40); // 40 = offhand SWAP key
         }

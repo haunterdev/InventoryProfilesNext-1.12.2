@@ -19,7 +19,7 @@ public class IPNConfig {
     // Sorting
     public static boolean enableSorting = true;
     public static boolean showSortButtons = true;
-    public static String defaultSortMethod = "id";
+    public static String defaultSortMethod = "category";
 
     // Auto-refill
     public static boolean enableAutoRefill = true;
@@ -65,9 +65,9 @@ public class IPNConfig {
                 "Enable inventory sorting");
         showSortButtons = config.getBoolean("showSortButtons", sortingCategory, true,
                 "Show sort buttons in container GUIs");
-        defaultSortMethod = config.getString("defaultSortMethod", sortingCategory, "id",
-                "Default sort method: 'id', 'name', or 'mod'",
-                new String[]{"id", "name", "mod"});
+        defaultSortMethod = config.getString("defaultSortMethod", sortingCategory, "category",
+                "Default sort method: 'category' (group by creative tab), 'id', 'name', or 'mod'",
+                new String[]{"category", "id", "name", "mod"});
 
         String refillCategory = "autorefill";
         config.addCustomCategoryComment(refillCategory, "Auto-refill settings");

@@ -11,7 +11,7 @@ Requires Minecraft 1.12.2 and Forge 14.23.5.2860+.
 ## Features
 
 ### Sorting
-- **Sort** (default `R`), merge stacks and sort by item ID, name, or mod (configurable)
+- **Sort** (default `R`), merge stacks and sort by creative tab (the default), item ID, name, or mod (configurable)
 - **Sort in columns** (`C`) / **rows** (`V`), groups item types into column/row blocks using the original's bin-packing algorithm
 - Sort buttons in every container GUI, with scroll-wheel sort-order switching
 - Hotbar restock, tops up partial hotbar stacks after sorting
