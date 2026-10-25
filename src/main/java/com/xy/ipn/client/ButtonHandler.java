@@ -6,6 +6,7 @@ import com.xy.ipn.client.action.ClientMoveAll;
 import com.xy.ipn.client.action.ClientProfiles;
 import com.xy.ipn.client.action.ClientSorter;
 import com.xy.ipn.proxy.ClientProxy;
+import com.xy.ipn.util.ContainerTypes;
 import com.xy.ipn.util.ContainerUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 @SideOnly(Side.CLIENT)
 public class ButtonHandler {
@@ -204,7 +206,20 @@ public class ButtonHandler {
         int offsetY = IPNConfig.sortButtonOffsetY;
         int rightEdge = guiLeft + xSize - 7 + offsetX;
 
-        boolean hasContainer = !isPlayerInvScreen && containerHasNonPlayerSlots(gui);
+        // Which buttons a screen gets follows the original's container types: sortable storage gets
+        // the container row, a plain backpack screen (furnace, anvil, hopper) the player row, and the
+        // temporary-slot screens (enchanting table, beacon, brewing stand), traders and the crafting
+        // table get no sort row. Move-all is for storage and the crafting table.
+        Set<ContainerTypes.Type> types = ContainerTypes.of(gui.inventorySlots);
+        boolean nonPlayerSlots = !isPlayerInvScreen && containerHasNonPlayerSlots(gui);
+        boolean hasContainer = nonPlayerSlots && types.contains(ContainerTypes.Type.SORTABLE_STORAGE);
+        boolean playerSort = isPlayerInvScreen || types.contains(ContainerTypes.Type.PURE_BACKPACK)
+                || (!hasContainer && types.contains(ContainerTypes.Type.SORTABLE_STORAGE));
+        boolean moveAll = IPNConfig.showMoveAllButtons && nonPlayerSlots
+                && (types.contains(ContainerTypes.Type.SORTABLE_STORAGE)
+                    || types.contains(ContainerTypes.Type.NO_SORTING_STORAGE)
+                    || types.contains(ContainerTypes.Type.CRAFTING));
+        boolean moveAllToPlayer = moveAll && !types.contains(ContainerTypes.Type.CRAFTING);
 
         int firstContainerSlot = -1;
         int firstPlayerSlot = -1;
@@ -323,7 +338,7 @@ public class ButtonHandler {
             sortButtons.add(cSortCol);
             sortButtons.add(cSortRow);
 
-            if (IPNConfig.showMoveAllButtons) {
+            if (moveAllToPlayer) {
                 SortButton moveToPlayer = new SortButton(nextId++,
                         rightEdge - btnSize - n * BTN_SPACING, containerY,
                         60, 0, singleTooltip("ipn.sort.button.move_to_player"), 4, firstContainerSlot);
@@ -332,45 +347,65 @@ public class ButtonHandler {
             }
 
             int playerY = guiTop + ySize - 95 + offsetY;
-            if (IPNConfig.showMoveAllButtons) {
+            if (moveAll) {
                 SortButton moveToCont = new SortButton(nextId++,
                         rightEdge - btnSize, playerY,
                         50, 0, singleTooltip("ipn.sort.button.move_to_container"), 3, firstPlayerSlot);
                 event.getButtonList().add(moveToCont);
                 sortButtons.add(moveToCont);
             }
-
-            if (screen instanceof GuiCrafting) {
-                int checkU = IPNConfig.enableContinuousCrafting ? 80 : 70;
-                craftingCheckbox = new SortButton(nextId++,
-                        outsideX, outsideY,
-                        checkU, 0, craftingCheckboxTooltip(), 8, -1);
-                event.getButtonList().add(craftingCheckbox);
-                sortButtons.add(craftingCheckbox);
-            }
         } else {
-            // === PLAYER INVENTORY or no-container GUI ===
+            // === PLAYER INVENTORY or a non-storage GUI ===
             int playerY = guiTop + ySize - 95 + offsetY;
             int n = 0;
 
-            SortButton pSortRow = new SortButton(nextId++,
-                    rightEdge - btnSize - n * BTN_SPACING, playerY,
-                    30, 0, sortRowTooltip(), 2, firstPlayerSlot);
-            n++;
-            SortButton pSortCol = new SortButton(nextId++,
-                    rightEdge - btnSize - n * BTN_SPACING, playerY,
-                    20, 0, sortColumnTooltip(), 1, firstPlayerSlot);
-            n++;
-            SortButton pSort = new SortButton(nextId++,
-                    rightEdge - btnSize - n * BTN_SPACING, playerY,
-                    10, 0, sortTooltip(), 0, firstPlayerSlot);
+            if (playerSort) {
+                SortButton pSortRow = new SortButton(nextId++,
+                        rightEdge - btnSize - n * BTN_SPACING, playerY,
+                        30, 0, sortRowTooltip(), 2, firstPlayerSlot);
+                n++;
+                SortButton pSortCol = new SortButton(nextId++,
+                        rightEdge - btnSize - n * BTN_SPACING, playerY,
+                        20, 0, sortColumnTooltip(), 1, firstPlayerSlot);
+                n++;
+                SortButton pSort = new SortButton(nextId++,
+                        rightEdge - btnSize - n * BTN_SPACING, playerY,
+                        10, 0, sortTooltip(), 0, firstPlayerSlot);
+                n++;
 
-            event.getButtonList().add(pSort);
-            event.getButtonList().add(pSortCol);
-            event.getButtonList().add(pSortRow);
-            sortButtons.add(pSort);
-            sortButtons.add(pSortCol);
-            sortButtons.add(pSortRow);
+                event.getButtonList().add(pSort);
+                event.getButtonList().add(pSortCol);
+                event.getButtonList().add(pSortRow);
+                sortButtons.add(pSort);
+                sortButtons.add(pSortCol);
+                sortButtons.add(pSortRow);
+            }
+
+            // Hopper (storage that is not sorted) and crafting table: move-all beside the player row,
+            // and move-to-player at the top except on the crafting table.
+            if (moveAll) {
+                SortButton moveToCont = new SortButton(nextId++,
+                        rightEdge - btnSize - n * BTN_SPACING, playerY,
+                        50, 0, singleTooltip("ipn.sort.button.move_to_container"), 3, firstPlayerSlot);
+                event.getButtonList().add(moveToCont);
+                sortButtons.add(moveToCont);
+            }
+            if (moveAllToPlayer) {
+                SortButton moveToPlayer = new SortButton(nextId++,
+                        rightEdge - btnSize, guiTop + 5 + offsetY,
+                        60, 0, singleTooltip("ipn.sort.button.move_to_player"), 4, firstContainerSlot);
+                event.getButtonList().add(moveToPlayer);
+                sortButtons.add(moveToPlayer);
+            }
+        }
+
+        if (screen instanceof GuiCrafting) {
+            int checkU = IPNConfig.enableContinuousCrafting ? 80 : 70;
+            craftingCheckbox = new SortButton(nextId++,
+                    outsideX, outsideY,
+                    checkU, 0, craftingCheckboxTooltip(), 8, -1);
+            event.getButtonList().add(craftingCheckbox);
+            sortButtons.add(craftingCheckbox);
 
         }
     }
